@@ -1,0 +1,8 @@
+$positive: #2292C4;
+$calm: #00A9EC;
+$assertive: #ef473a;
+$link-color: $assertive;
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+@import "../www/lib/ionic/scss";
+
+.bar { border-bottom: 0; }
