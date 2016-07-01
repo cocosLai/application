@@ -23,5 +23,7 @@
     "ionic-plugin-keyboard",
     "onesignal-cordova-plugin"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android"
+  ]
 }

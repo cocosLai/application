@@ -2,8 +2,25 @@
     <ion-content padding="true" class="has-header">
         <div class="list card " id="home-card21">
             <ion-item class="item-avatar assertive  " id="home-list-item1">
-                <h2assertive>Username
-                    <p>07777 777 777</p>
+                <h2assertive>SecretMe Number
+                    <p>{{userinfo.number}}</p>
+                </h2assertive>
+            </ion-item>
+            <ion-item class="item-avatar assertive  " id="home-list-item1">
+                <h2assertive>Credit Balance
+                    <p>{{userinfo.currentCreditBalance}}</p>
+                </h2assertive>
+            </ion-item>
+        </div>
+        <div class="list card " id="home-card21" >
+            <ion-item class="item-avatar assertive  " id="home-list-item1">
+                <h2assertive>OneSignal User ID
+                    <p>{{ids.UserId}}</p>
+                </h2assertive>
+            </ion-item>
+            <ion-item class="item-avatar assertive  " id="home-list-item1">
+                <h2assertive>OneSignal Push Token
+                    <p>{{ids.pushToken}}</p>
                 </h2assertive>
             </ion-item>
         </div>

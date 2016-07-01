@@ -7,40 +7,6 @@ angular.module('app.routes', [])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-    
-  
-
-      .state('tabsController.messages', {
-    url: '/messages',
-    views: {
-      'tab2': {
-        templateUrl: 'templates/messages.html',
-        controller: 'messagesCtrl'
-      }
-    }
-  })
-
-  .state('tabsController.voicemail', {
-    url: '/voicemail',
-    views: {
-      'tab3': {
-        templateUrl: 'templates/voicemail.html',
-        controller: 'voicemailCtrl'
-      }
-    }
-  })
-
-  .state('cloudTabDefaultPage', {
-    url: '/page4',
-    templateUrl: 'templates/cloudTabDefaultPage.html',
-    controller: 'cloudTabDefaultPageCtrl'
-  })
-
-  .state('tabsController', {
-    url: '/page1',
-    templateUrl: 'templates/tabsController.html',
-    abstract:true
-  })
 
   .state('tabsController.home', {
     url: '/',
@@ -52,6 +18,43 @@ angular.module('app.routes', [])
     }
   })
 
+  .state('tabsController.history', {
+    url: '/history',
+    views: {
+      'tab2': {
+        templateUrl: 'templates/history.html',
+        controller: 'historyCtrl'
+      }
+    }
+  })
+
+  .state('tabsController.messages', {
+    url: '/messages',
+    views: {
+      'tab3': {
+        templateUrl: 'templates/messages.html',
+        controller: 'messagesCtrl'
+      }
+    }
+  })
+
+  .state('tabsController.voicemail', {
+    url: '/voicemail',
+    views: {
+      'tab4': {
+        templateUrl: 'templates/voicemail.html',
+        controller: 'voicemailCtrl'
+      }
+    }
+  })
+
+  .state('tabsController', {
+    url: '/page1',
+    templateUrl: 'templates/tabsController.html',
+    abstract:true
+  })
+
+
   .state('tabsController.settings2', {
     url: '/settings',
     views: {
@@ -62,28 +65,11 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('tabsController.history', {
-    url: '/history',
-    views: {
-      'tab5': {
-        templateUrl: 'templates/history.html',
-        controller: 'historyCtrl'
-      }
-    }
-  })
 
-  .state('tabsController.passcode', {
-    url: '/settings/passcode',
-    views: {
-      'tab4': {
-        templateUrl: 'templates/passcode.html',
-        controller: 'passcodeCtrl'
-      }
-    }
-  })
+
 
   .state('login', {
-    url: '/page9',
+    url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
@@ -102,6 +88,6 @@ angular.module('app.routes', [])
 
 $urlRouterProvider.otherwise('/onboarding')
 
-  
+
 
 });

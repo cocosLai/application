@@ -5,17 +5,55 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ionic-lock-screen'])
+angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ionicSettings'])
 
-.config(function($ionicConfigProvider) {
+.constant('AUTH_EVENTS', {
+  notAuthenticated: 'auth-not-authenticated',
+  notAuthorized: 'auth-not-authorized'
+})
+
+.constant('USER_ROLES', {
+  admin: 'admin_role',
+  public: 'public_role'
+})
+
+.constant('API_ENDPOINT', {
+//  url: 'http://10.0.0.25:8100/api'
+    url: 'https://api.secretme.net/api'
+})
+
+
+.constant('AUTH_ENDPOINT', {
+  //url: '/oauth/token'
+  url: 'https://api.secretme.net/oauth/token'
+})
+
+// .config(function ($httpProvider) {
+//   $httpProvider.defaults.headers.common = {};
+//   $httpProvider.defaults.headers.post = {};
+//   $httpProvider.defaults.headers.put = {};
+//   $httpProvider.defaults.headers.patch = {};
+// })
+
+.config(function($stateProvider, $ionicConfigProvider) {
   //$ionicConfigProvider.views.maxCache(5);
 
   $ionicConfigProvider.tabs.position('top').style('striped');
   // note that you can also chain configs
 })
 
-.run(function($lockScreen, $ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
+
+    $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+    if (!AuthService.isAuthenticated()) {
+      console.log(next.name);
+      if (next.name !== 'login' && next.name !== 'onboarding') {
+        event.preventDefault();
+        $state.go('login');
+      }
+    }
+  });
 
     // lockScreen
     //
@@ -47,32 +85,26 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
       StatusBar.styleDefault();
     }
 
-
-    // OneSignal Notifications
-    // Enable to debug issues.
-    // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
-
-    var notificationOpenedCallback = function(jsonData) {
-      console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
-    };
-
-    window.plugins.OneSignal.init("98a36864-756e-47ea-9fac-13f0d9ff2b20",
-                                   {googleProjectNumber: "830511586224"},
-                                   notificationOpenedCallback);
-
-    // Show an alert box if a notification comes in when the user is in your app.
-    window.plugins.OneSignal.enableInAppAlertNotification(true);
-
-    // Ionic Platform Basic notifications test
-    //
-    // //Create instance of push service and register app for notifications each time it's opened
-    // var push = new Ionic.Push({
-    //   "debug": true
-    // });
-    //
-    // push.register(function(token) {
-    //   console.log("Device token:",token.token);
-    // });
-
   });
 })
+
+document.addEventListener('deviceready', function ($rootScope) {
+  // Enable to debug issues.
+  // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+
+  hockeyapp.start(null, null, "061931d93db74b138c043b0b1520eca1");
+
+  hockeyapp.checkForUpdate();
+
+  var notificationOpenedCallback = function(jsonData) {
+    console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+  };
+
+  window.plugins.OneSignal.init("98a36864-756e-47ea-9fac-13f0d9ff2b20",
+                                 {googleProjectNumber: "830511586224"},
+                                 notificationOpenedCallback);
+
+  // Show an alert box if a notification comes in when the user is in your app.
+  window.plugins.OneSignal.enableInAppAlertNotification(true);
+
+}, false);
