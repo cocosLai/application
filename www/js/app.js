@@ -9,7 +9,6 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 
 .constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
-  notAuthorized: 'auth-not-authorized'
 })
 
 .constant('USER_ROLES', {
@@ -45,15 +44,12 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 .run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
 
-    $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
-    if (!AuthService.isAuthenticated()) {
-      console.log(next.name);
-      if (next.name !== 'login' && next.name !== 'onboarding') {
-        event.preventDefault();
-        $state.go('login');
+
+    $rootScope.logout = function(){
+        AuthService.logout();
+        console.log("logged out");
       }
-    }
-  });
+
 
     // lockScreen
     //
@@ -90,7 +86,7 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 
 document.addEventListener('deviceready', function ($rootScope) {
   // Enable to debug issues.
-  // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+  window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
 
   hockeyapp.start(null, null, "061931d93db74b138c043b0b1520eca1");
 

@@ -1,0 +1,15 @@
+<ion-view title="Message">
+    <ion-content padding="true" class="has-header">
+        <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
+            <ion-item class="item-icon-left  " id="messages-list-item8">
+                <i class="icon ion-ionic"></i>{{message.origin}}<br />{{message.messageContents}}
+                <ion-option-button class="button-positive" ng-click="share(item)">
+                  Archive
+                </ion-option-button>
+                <ion-option-button class="button-info" ng-click="edit(item)">
+                  Edit
+                </ion-option-button>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

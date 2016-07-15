@@ -38,8 +38,28 @@ angular.module('app.routes', [])
     }
   })
 
+  .state('tabsController.messagedetail', {
+    url: '/message/:id',
+    views: {
+      'tab3': {
+        templateUrl: 'templates/message.html',
+        controller: 'messageCtrl'
+      }
+    }
+  })
+
+  .state('tabsController.voicemails', {
+    url: '/voicemails',
+    views: {
+      'tab4': {
+        templateUrl: 'templates/voicemails.html',
+        controller: 'voicemailsCtrl'
+      }
+    }
+  })
+
   .state('tabsController.voicemail', {
-    url: '/voicemail',
+    url: '/voicemail/:id',
     views: {
       'tab4': {
         templateUrl: 'templates/voicemail.html',
@@ -88,6 +108,16 @@ angular.module('app.routes', [])
 
 $urlRouterProvider.otherwise('/onboarding')
 
+})
 
-
+.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+    if (!AuthService.isAuthenticated()) {
+      console.log(next.name);
+      if (next.name !== 'login' && next.name !== 'onboarding') {
+        event.preventDefault();
+        $state.go('login');
+      }
+    }
+  });
 });

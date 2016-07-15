@@ -10,20 +10,38 @@ angular.module('app.controllers', [])
   $scope.login = function() {
     AuthService.login($scope.user).then(function(msg) {
       $state.go('tabsController.home');
-    }, function(errMsg) {
+    }, function(error) {
+      console.log(error);
       var alertPopup = $ionicPopup.alert({
         title: 'Login failed!',
-        template: errMsg
+        template: error.error_description
       });
     });
   };
 })
 
-.controller('messagesCtrl', function($scope, AuthService, API_ENDPOINT, $http, $state) {
-  $http.get(API_ENDPOINT.url + '/messages').then(function(result) {
-    $scope.messages = result.data;
-  });
-})
+//.controller('messagesCtrl', function($scope, AuthService, API_ENDPOINT, $http, $state) {
+  // $http.get(API_ENDPOINT.url + '/messages').then(function(result) {
+  //   $scope.messages = result.data;
+  // });
+//})
+
+
+.controller("messagesCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($scope, $http, AuthService, API_ENDPOINT, MessageService){
+    MessageService.GetMessages().then(function(messages){
+        console.log(messages);
+        $scope.messages = messages;
+    });
+}])
+
+.controller("messageCtrl",['$stateParams', '$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($stateParams, $scope, $http, AuthService, API_ENDPOINT, MessageService){
+    var messageId = $stateParams.id;
+    MessageService.GetMessage(messageId).then(function(message){
+        console.log(message);
+        $scope.message = message;
+    });
+}])
+
 
 .controller('voicemailCtrl', function($scope) {
   $http.get(API_ENDPOINT.url + '/voicemails').then(function(result) {
@@ -46,6 +64,10 @@ angular.module('app.controllers', [])
       $scope.userinfo.number = result.data.mobileNumber;
     });
 
+    // $rootScope.logout = function(){
+    //     AuthService.logout();
+    //     console.log("logged out");
+    //   }
   // $ionicSettings.init({
   //       awesomeSelection: {
   //           type: 'selection',
@@ -61,7 +83,7 @@ angular.module('app.controllers', [])
   //   });
 
 
-    //
+
     // window.plugins.OneSignal.getIds(function(ids) {
     //   console.log('getIds: ' + JSON.stringify(ids)); // I can see PushToken and UserId in the console.
     //   //$rootScope.pushToken = ids.pushToken;

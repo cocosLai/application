@@ -1,14 +1,5 @@
 angular.module('app.services', [])
 
-.factory('BlankFactory', [function(){
-
-}])
-
-.service('BlankService', [function(){
-
-}])
-
-
 // .factory('SettingsFactory', [function() {
 //
 //     var _settingsKey = "appSettings",
@@ -56,6 +47,16 @@ angular.module('app.services', [])
 
   function storeUserCredentials(token) {
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
+
+    //Send device ID to SM API
+    $http({
+      method: 'POST',
+      url: AUTH_ENDPOINT.url,
+      data: {  }
+    }).then(function(result) {
+
+    });
+
     useCredentials(token);
   }
 
@@ -73,19 +74,6 @@ angular.module('app.services', [])
     $http.defaults.headers.common.Authorization = undefined;
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
-
-  var register = function(user) {
-    return $q(function(resolve, reject) {
-      $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
-        if (result.data.success) {
-          resolve(result.data.msg);
-        } else {
-          reject(result.data.msg);
-        }
-      });
-    });
-  };
-
 
   var login = function(user) {
     return $q(function(resolve, reject) {
@@ -108,13 +96,17 @@ angular.module('app.services', [])
           data: {grant_type: 'password', username: user.username, password: user.password}
 
       }).then(function(result) {
+        console.log(result);
         if (result.statusText) {
           //Login success, store the bearer token.
           storeUserCredentials(result.data.access_token);
+          console.log("yep");
           resolve(result.statusText);
         } else {
           //Failed - bad times.
+          console.log("nope");
           reject(result.statusText);
+
         }
       });
 
@@ -129,23 +121,62 @@ angular.module('app.services', [])
 
   return {
     login: login,
-    register: register,
     logout: logout,
     isAuthenticated: function() {return isAuthenticated;},
   };
 })
 
-.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
-  return {
-    responseError: function (response) {
-      $rootScope.$broadcast({
-        401: AUTH_EVENTS.notAuthenticated,
-      }[response.status], response);
-      return $q.reject(response);
-    }
-  };
-})
+// .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+//   return {
+//     responseError: function (response) {
+//       $rootScope.$broadcast({
+//         401: AUTH_EVENTS.notAuthenticated,
+//         400: AUTH_EVENTS.notAuthenticated,
+//       }[response.status], response);
+//       return $q.reject(response);
+//     }
+//   };
+// })
 
-.config(function ($httpProvider) {
-  $httpProvider.interceptors.push('AuthInterceptor');
-});
+// .config(function ($httpProvider) {
+//   $httpProvider.interceptors.push('AuthInterceptor');
+// })
+
+
+
+
+.factory('MessageService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
+    var messages = []; //Private Variable
+    return {
+        GetMessages: function(){
+            return $http.get(API_ENDPOINT.url + '/messages').then(function(response){
+                messages = response.data;
+                return response.data;
+            });
+        },
+        GetMessage: function(messageId){
+          return $http.get(API_ENDPOINT.url + '/messages/' + messageId).then(function(response){
+              messages = response.data;
+              return response.data;
+          });
+        }
+    }
+}])
+
+.factory('VoicemailService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
+    var voicemails = []; //Private Variable
+    return {
+        GetVoicemails: function(){
+            return $http.get(API_ENDPOINT.url + '/voicemails').then(function(response){
+                voicemails = response.data;
+                return response.data;
+            });
+        },
+        GetVoicemail: function(voiceId){
+          return $http.get(API_ENDPOINT.url + '/voicemails/' + voiceId).then(function(response){
+              voicemails = response.data;
+              return response.data;
+          });
+        }
+    }
+}])
