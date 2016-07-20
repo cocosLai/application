@@ -109,15 +109,3 @@ angular.module('app.routes', [])
 $urlRouterProvider.otherwise('/onboarding')
 
 })
-
-.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
-  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
-    if (!AuthService.isAuthenticated()) {
-      console.log(next.name);
-      if (next.name !== 'login' && next.name !== 'onboarding') {
-        event.preventDefault();
-        $state.go('login');
-      }
-    }
-  });
-});

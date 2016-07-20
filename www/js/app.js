@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ionicSettings'])
+angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ionicSettings', 'angularMoment'])
 
 .constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
@@ -45,11 +45,18 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
   $ionicPlatform.ready(function() {
 
 
-    $rootScope.logout = function(){
-        AuthService.logout();
-        console.log("logged out");
-      }
 
+      $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+        console.log(AuthService.isAuthenticated());
+        //console.log(next.name);
+        if (!AuthService.isAuthenticated()) {
+          console.log(next.name);
+          if (next.name !== 'login' && next.name !== 'onboarding') {
+            event.preventDefault();
+            $state.go('login');
+          }
+        }
+      });
 
     // lockScreen
     //

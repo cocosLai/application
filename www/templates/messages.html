@@ -15,17 +15,21 @@
  }
 */
 
+
+
 <ion-view title="Messages" id="page2" class=" ">
     <ion-content padding="true" class="has-header">
-        <h5 id="messages-heading1" style="color:#000000;font-weight:400;" class=" ">Today</h5>
-        <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
-          <!-- <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages" ui-sref="tabsController.messages.detail({ id: message.idInt })"> -->
-            <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages" ui-sref="tabsController.messagedetail({ id: message.idInt })">
-                <i class="icon ion-ionic"></i>{{message.origin}}<br />{{message.messageContents}}
-                <ion-option-button class="button-danger" ng-click="delete(message.idInt)">
-                  Delete
-                </ion-option-button>
-            </ion-item>
-        </ion-list>
+        <div ng-repeat="messagePerDate in messagesToFilter() | filter:filterDates | orderBy:'-utc'">
+            <h5 id="messages-heading1" style="color:#000000;font-weight:400;" am-time-ago="messagePerDate.utc"></h5>
+            <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
+              <!-- <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages" ui-sref="tabsController.messages.detail({ id: message.idInt })"> -->
+                <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages | filter:{utc: messagePerDate.utc}" ui-sref="tabsController.messagedetail({ id: message.idInt })">
+                    <i class="icon ion-ionic"></i>{{message.origin}}<br />{{message.messageContents}}
+                    <ion-option-button class="button-danger" ng-click="delete(message.idInt)">
+                      Delete
+                    </ion-option-button>
+                </ion-item>
+            </ion-list>
+        </div>
     </ion-content>
 </ion-view>

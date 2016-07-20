@@ -13,6 +13,8 @@
 
     <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
 
+    <script src="lib/moment/moment.js"></script>
+    <script src="lib/angular-moment/angular-moment.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
     <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
 <!-- <script src="cordova.js"></script> -->
@@ -26,7 +28,6 @@
     <link href="lib/ionic-settings/dist/ionic-settings.min.css" rel="stylesheet">
 
     <link href="lib/mdi/css/materialdesignicons.min.css" rel="stylesheet">
-
 
     <style type="text/css">
       .platform-ios .manual-ios-statusbar-padding{
@@ -60,7 +61,7 @@
     -->
 
   </head>
-  <body ng-app="app" animation="slide-left-right-ios7">
+  <body ng-app="app" animation="slide-left-right-ios7" ng-controller="AppCtrl">
     <lock-screen></lock-screen>
   <div>
     <ion-side-menus enable-menu-with-back-views="true" data-componentid="side-menu21">

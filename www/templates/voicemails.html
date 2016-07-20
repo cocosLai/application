@@ -1,9 +1,12 @@
 <ion-view title="Voicemails" id="page3" class=" ">
     <ion-content padding="true" class="has-header">
-        <ion-list id="voicemail-list2" class=" ">
-            <ion-item class="item-icon-left  " id="voicemail-list-item6" href="tel:07777 777 777">
-                <i class="icon ion-android-call"></i>07973 123 456
-                <span class="item-note">12:45</span>
+        <h5 id="messages-heading1" style="color:#000000;font-weight:400;" class=" ">Today</h5>
+        <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
+              <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="voicemail in voicemails" ui-sref="tabsController.voicemail({ id: voicemail.idInt })">
+                <i class="icon ion-ionic"></i>{{voicemail.origin}}<br />{{voicemail.messageContents}}
+                <ion-option-button class="button-danger" ng-click="share(item)">
+                  Delete
+                </ion-option-button>
             </ion-item>
         </ion-list>
     </ion-content>

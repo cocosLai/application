@@ -39,9 +39,10 @@ angular.module('app.services', [])
   var authToken;
 
   function loadUserCredentials() {
-    var token = 'bearer ' + window.localStorage.getItem(LOCAL_TOKEN_KEY);
+    var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
     if (token) {
-      useCredentials(token);
+      typeAndToken = 'bearer ' + token;
+      useCredentials(typeAndToken);
     }
   }
 
@@ -49,13 +50,13 @@ angular.module('app.services', [])
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
 
     //Send device ID to SM API
-    $http({
-      method: 'POST',
-      url: AUTH_ENDPOINT.url,
-      data: {  }
-    }).then(function(result) {
-
-    });
+    // $http({
+    //   method: 'POST',
+    //   url: AUTH_ENDPOINT.url,
+    //   data: {  }
+    // }).then(function(result) {
+    //
+    // });
 
     useCredentials(token);
   }
@@ -77,7 +78,7 @@ angular.module('app.services', [])
 
   var login = function(user) {
     return $q(function(resolve, reject) {
-
+      console.log(user);
       //POST Request to Authentication API
       $http({
           method: 'POST',
@@ -95,19 +96,13 @@ angular.module('app.services', [])
           },
           data: {grant_type: 'password', username: user.username, password: user.password}
 
-      }).then(function(result) {
-        console.log(result);
-        if (result.statusText) {
+      }).then(function(response) {
           //Login success, store the bearer token.
-          storeUserCredentials(result.data.access_token);
-          console.log("yep");
-          resolve(result.statusText);
-        } else {
-          //Failed - bad times.
-          console.log("nope");
-          reject(result.statusText);
+          storeUserCredentials(response.data.access_token);
+          resolve(response.statusText);
 
-        }
+      },function error(response) {
+        reject(response.data.error_description);
       });
 
     });
@@ -126,24 +121,57 @@ angular.module('app.services', [])
   };
 })
 
-// .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
-//   return {
-//     responseError: function (response) {
-//       $rootScope.$broadcast({
-//         401: AUTH_EVENTS.notAuthenticated,
-//         400: AUTH_EVENTS.notAuthenticated,
-//       }[response.status], response);
-//       return $q.reject(response);
-//     }
-//   };
-// })
+.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+  return {
+    responseError: function (response) {
+      $rootScope.$broadcast({
+        401: AUTH_EVENTS.notAuthenticated,
+      }[response.status], response);
+      return $q.reject(response);
+    }
+  };
+})
 
-// .config(function ($httpProvider) {
-//   $httpProvider.interceptors.push('AuthInterceptor');
-// })
-
+.config(function ($httpProvider) {
+  $httpProvider.interceptors.push('AuthInterceptor');
+})
 
 
+
+.factory('UserService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
+  var user = []; //Private Variable
+  var number = []; //Private Variable
+    return {
+        GetUser: function(){
+            return $http.get(API_ENDPOINT.url + '/user').then(function(response){
+                user = response.data;
+                return response.data;
+            });
+        },
+        GetNumber: function(){
+          return $http.get(API_ENDPOINT.url + '/user/number').then(function(response){
+              number = response.data;
+              return response.data;
+          });
+        }
+    }
+}])
+
+.factory('DeviceService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
+    var device = []; //Private Variable
+    return {
+        GetSMNumber: function(){
+            return $http.get(API_ENDPOINT.url + '/user/number').then(function(response){
+                device = response.data;
+                return response.data;
+            });
+        }
+    }
+}])
+
+// $http.get(API_ENDPOINT.url + '/user/number').then(function(result) {
+//   $scope.userinfo.number = result.data.mobileNumber;
+// });
 
 .factory('MessageService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
     var messages = []; //Private Variable
@@ -151,7 +179,16 @@ angular.module('app.services', [])
         GetMessages: function(){
             return $http.get(API_ENDPOINT.url + '/messages').then(function(response){
                 messages = response.data;
-                return response.data;
+
+                //Loop through all items anad replace ISO/8601 Date/time string with UTC date integer - easier to sort against.
+                for (var i = 0; i < messages.length; i++) {
+                  var datetimeISO = messages[i].timestamp;
+                  datetime = new Date(Date.parse(datetimeISO));
+                  var date = Date.UTC(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
+                  messages[i].utc = date;
+            		}
+                console.log(messages);
+                return messages;
             });
         },
         GetMessage: function(messageId){

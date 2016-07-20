@@ -9,38 +9,83 @@ angular.module('app.controllers', [])
 
   $scope.login = function() {
     AuthService.login($scope.user).then(function(msg) {
+      $scope.user = "";
       $state.go('tabsController.home');
     }, function(error) {
       console.log(error);
       var alertPopup = $ionicPopup.alert({
         title: 'Login failed!',
-        template: error.error_description
+        template: error
       });
     });
   };
 })
 
-//.controller('messagesCtrl', function($scope, AuthService, API_ENDPOINT, $http, $state) {
-  // $http.get(API_ENDPOINT.url + '/messages').then(function(result) {
-  //   $scope.messages = result.data;
-  // });
-//})
 
-
+//Messages Master
 .controller("messagesCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($scope, $http, AuthService, API_ENDPOINT, MessageService){
     MessageService.GetMessages().then(function(messages){
-        console.log(messages);
         $scope.messages = messages;
+
+        var indexedDates = [];
+
+        $scope.messagesToFilter = function() {
+            indexedDates = [];
+            return $scope.messages;
+        }
+
+        $scope.filterDates = function(message) {
+          var dateIsNew = indexedDates.indexOf(message.utc) == -1;
+
+          if (dateIsNew) {
+            indexedDates.push(message.utc);
+          }
+
+          return dateIsNew;
+        }
     });
 }])
 
+//Messages Detail
 .controller("messageCtrl",['$stateParams', '$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($stateParams, $scope, $http, AuthService, API_ENDPOINT, MessageService){
     var messageId = $stateParams.id;
     MessageService.GetMessage(messageId).then(function(message){
-        console.log(message);
         $scope.message = message;
     });
 }])
+
+//Voicemail Master
+.controller("voicemailsCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'VoicemailService',function($scope, $http, AuthService, API_ENDPOINT, VoicemailService){
+    VoicemailService.GetVoicemails().then(function(voicemails){
+        $scope.voicemails = voicemails;
+
+        var indexedDates = [];
+
+        $scope.messagesToFilter = function() {
+            indexedDates = [];
+            return $scope.messages;
+        }
+
+        $scope.filterDates = function(message) {
+          var dateIsNew = indexedDates.indexOf(voicemail.utc) == -1;
+
+          if (dateIsNew) {
+            indexedDates.push(voicemail.utc);
+          }
+
+          return dateIsNew;
+        }
+    });
+}])
+
+//Voicemail Detail
+.controller("voicemailCtrl",['$stateParams', '$scope', '$http','AuthService', 'API_ENDPOINT', 'VoicemailService',function($stateParams, $scope, $http, AuthService, API_ENDPOINT, VoicemailService){
+    var voicemailId = $stateParams.id;
+    VoicemailService.GetVoicemail(voicemailId).then(function(voicemail){
+        $scope.message = voicemail;
+    });
+}])
+
 
 
 .controller('voicemailCtrl', function($scope) {
@@ -53,21 +98,22 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('homeCtrl', function($scope, AuthService, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings) {
+.controller('homeCtrl', function($scope, AuthService, UserService, AUTH_EVENTS, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings) {
 
-    $http.get(API_ENDPOINT.url + '/user').then(function(result) {
-      $scope.userinfo = result.data;
+    UserService.GetUser().then(function(user){
+        $scope.userinfo = user;
     });
 
-    $http.get(API_ENDPOINT.url + '/user/number').then(function(result) {
-      console.log(result.data);
-      $scope.userinfo.number = result.data.mobileNumber;
+    UserService.GetNumber().then(function(number){
+        $scope.userinfo.number = number.mobileNumber;
     });
 
-    // $rootScope.logout = function(){
-    //     AuthService.logout();
-    //     console.log("logged out");
-    //   }
+    $rootScope.logout = function(){
+        AuthService.logout();
+        $state.go('login');
+    }
+
+
   // $ionicSettings.init({
   //       awesomeSelection: {
   //           type: 'selection',
@@ -133,3 +179,14 @@ angular.module('app.controllers', [])
 .controller('pageCtrl', function($scope) {
 
 })
+
+.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+  $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+    AuthService.logout();
+    $state.go('login');
+    var alertPopup = $ionicPopup.alert({
+      title: 'Session Lost!',
+      template: 'Sorry, You have to login again.'
+    });
+  });
+});
