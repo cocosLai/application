@@ -14,6 +14,10 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+$positive: #2292C4;
+$calm: #00A9EC;
+$assertive: #ef473a;
+$link-color: $assertive;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -21,3 +25,36 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.bar { border-bottom: 0; }
+
+
+.sm-loader {
+  margin-left: auto;
+    margin-right: auto;
+    display: block;
+
+    background: white;
+    width: 64px;
+    height: 64px;
+    background-image: url("../img/loading.png");
+    background-size: auto 64px;
+
+    -webkit-animation: loading .8s steps(16) infinite;
+       -moz-animation: loading .8s steps(16) infinite;
+            animation: loading .8s steps(16) infinite;
+}
+
+@-webkit-keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -1024px; }
+}
+
+@-moz-keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -1024px; }
+}
+
+@keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -1024px; }
+}

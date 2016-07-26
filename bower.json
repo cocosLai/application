@@ -9,7 +9,8 @@
     "animate.css": "animation.css#^3.5.2",
     "ionic-lock-screen": "^1.0.1",
     "mdi": "^1.6.50",
-    "angular-moment": "^0.10.3"
+    "angular-moment": "^0.10.3",
+    "ionic-settings": "^1.0.2"
   },
   "resolutions": {
     "angular": ">= 1.0.8"

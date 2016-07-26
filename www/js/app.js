@@ -11,11 +11,6 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
   notAuthenticated: 'auth-not-authenticated',
 })
 
-.constant('USER_ROLES', {
-  admin: 'admin_role',
-  public: 'public_role'
-})
-
 .constant('API_ENDPOINT', {
 //  url: 'http://10.0.0.25:8100/api'
     url: 'https://api.secretme.net/api'
@@ -45,12 +40,9 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
   $ionicPlatform.ready(function() {
 
 
-
+      // Monitor state changes and check if we're authenticated. If not, and the next route isn't login or onboarding, send them to login
       $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
-        console.log(AuthService.isAuthenticated());
-        //console.log(next.name);
         if (!AuthService.isAuthenticated()) {
-          console.log(next.name);
           if (next.name !== 'login' && next.name !== 'onboarding') {
             event.preventDefault();
             $state.go('login');

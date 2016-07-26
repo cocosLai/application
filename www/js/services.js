@@ -41,14 +41,12 @@ angular.module('app.services', [])
   function loadUserCredentials() {
     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
     if (token) {
-      typeAndToken = 'bearer ' + token;
-      useCredentials(typeAndToken);
+      useCredentials(token);
     }
   }
 
   function storeUserCredentials(token) {
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
-
     //Send device ID to SM API
     // $http({
     //   method: 'POST',
@@ -57,7 +55,6 @@ angular.module('app.services', [])
     // }).then(function(result) {
     //
     // });
-
     useCredentials(token);
   }
 
@@ -66,7 +63,7 @@ angular.module('app.services', [])
     authToken = token;
 
     // Set the token as header for your requests!
-    $http.defaults.headers.common.Authorization = authToken;
+    $http.defaults.headers.common.Authorization = "bearer " + authToken;
   }
 
   function destroyUserCredentials() {
@@ -78,7 +75,6 @@ angular.module('app.services', [])
 
   var login = function(user) {
     return $q(function(resolve, reject) {
-      console.log(user);
       //POST Request to Authentication API
       $http({
           method: 'POST',
@@ -186,8 +182,10 @@ angular.module('app.services', [])
                   datetime = new Date(Date.parse(datetimeISO));
                   var date = Date.UTC(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
                   messages[i].utc = date;
+
+                  messages[i].utc = date;
+
             		}
-                console.log(messages);
                 return messages;
             });
         },
@@ -206,6 +204,7 @@ angular.module('app.services', [])
         GetVoicemails: function(){
             return $http.get(API_ENDPOINT.url + '/voicemails').then(function(response){
                 voicemails = response.data;
+                console.log(voicemails);
                 return response.data;
             });
         },

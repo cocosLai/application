@@ -19,8 +19,12 @@
 
 <ion-view title="Messages" id="page2" class=" ">
     <ion-content padding="true" class="has-header">
+      <pre am-time-ago="today()"></pre>
+      <pre am-time-ago="yesterday()"></pre>
+
         <div ng-repeat="messagePerDate in messagesToFilter() | filter:filterDates | orderBy:'-utc'">
-            <h5 id="messages-heading1" style="color:#000000;font-weight:400;" am-time-ago="messagePerDate.utc"></h5>
+            <h5 ng-if="messagePerDate.utc === today()" am-time-ago="today()"></h5>
+            <h5 ng-if="messagePerDate.utc != today()">{{messagePerDate.utc}}</h5>
             <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
               <!-- <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages" ui-sref="tabsController.messages.detail({ id: message.idInt })"> -->
                 <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages | filter:{utc: messagePerDate.utc}" ui-sref="tabsController.messagedetail({ id: message.idInt })">
@@ -31,5 +35,6 @@
                 </ion-item>
             </ion-list>
         </div>
+
     </ion-content>
 </ion-view>

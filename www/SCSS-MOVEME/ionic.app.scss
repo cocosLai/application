@@ -6,3 +6,28 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "../www/lib/ionic/scss";
 
 .bar { border-bottom: 0; }
+
+.sm-loader {
+    width: 256px;
+    height: 256px;
+    background-image: url("../img/loading.png");
+
+    -webkit-animation: loading .8s steps(16) infinite;
+       -moz-animation: loading .8s steps(16) infinite;
+            animation: loading .8s steps(16) infinite;
+}
+
+@-webkit-keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -4096px; }
+}
+
+@-moz-keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -4096px; }
+}
+
+@keyframes loading {
+   from { background-position:    0px; }
+     to { background-position: -4096px; }
+}

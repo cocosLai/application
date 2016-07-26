@@ -43,6 +43,30 @@ angular.module('app.controllers', [])
 
           return dateIsNew;
         }
+
+        var REFERENCE = moment();
+        var TODAY = REFERENCE.clone().startOf('day');
+        var YESTERDAY = REFERENCE.clone().subtract(1, 'days').startOf('day');
+        //var A_WEEK_OLD = REFERENCE.clone().subtract(7, 'days').startOf('day');
+
+function isToday(momentDate) {
+    return momentDate.isSame(TODAY, 'd');
+}
+function isYesterday(momentDate) {
+    return momentDate.isSame(YESTERDAY, 'd');
+}
+
+        $scope.today = function() {
+          d = new Date();
+          var today = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+          return today;
+        }
+        $scope.yesterday = function() {
+          d = new Date();
+          var yesterday = Date.UTC(d.getFullYear(), d.getMonth(), (d.getDate()-1));
+          return yesterday;
+        }
+
     });
 }])
 
@@ -58,7 +82,6 @@ angular.module('app.controllers', [])
 .controller("voicemailsCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'VoicemailService',function($scope, $http, AuthService, API_ENDPOINT, VoicemailService){
     VoicemailService.GetVoicemails().then(function(voicemails){
         $scope.voicemails = voicemails;
-
         var indexedDates = [];
 
         $scope.messagesToFilter = function() {
