@@ -21,7 +21,6 @@ angular.module('app.controllers', [])
   };
 })
 
-
 //Messages Master
 .controller("messagesCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($scope, $http, AuthService, API_ENDPOINT, MessageService){
     MessageService.GetMessages().then(function(messages){
@@ -137,6 +136,7 @@ function isYesterday(momentDate) {
     }
 
 
+
   // $ionicSettings.init({
   //       awesomeSelection: {
   //           type: 'selection',
@@ -199,11 +199,9 @@ function isYesterday(momentDate) {
 
 })
 
-.controller('pageCtrl', function($scope) {
 
-})
 
-.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicSettings) {
   $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
     AuthService.logout();
     $state.go('login');
@@ -212,4 +210,31 @@ function isYesterday(momentDate) {
       template: 'Sorry, You have to login again.'
     });
   });
+
+  $scope.initQuietMode = function(){
+    $scope.quietMode = true;
+  }
+
+  $scope.changeQuietMode = function(){
+    $scope.quietMode = !$scope.quietMode;
+  }
+
+  $scope.authenticated = AuthService.isAuthenticated();
+
+  $scope.test = "This Works";
+
+    // $ionicSettings.init({
+    //     awesomeSelection: {
+    //         type: 'selection',
+    //         values: ['one', 'two', 'three'],
+    //         label: 'Awesome Selection',
+    //         value: 'two'
+    //     },
+    //     coolToggle: {
+    //         type: 'toggle',
+    //         label: 'Cool toggle',
+    //         value: true
+    //     }
+    // });
+
 });

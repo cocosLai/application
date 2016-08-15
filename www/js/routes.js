@@ -1,4 +1,4 @@
-angular.module('app.routes', [])
+angular.module('app.routes', ['ionicSettings'])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -8,22 +8,86 @@ angular.module('app.routes', [])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  .state('tabsController.home', {
+
+
+  // .state('tabsController.history', {
+  //   url: '/history',
+  //   views: {
+  //     'tab2': {
+  //       templateUrl: 'templates/history.html',
+  //       controller: 'historyCtrl'
+  //     }
+  //   }
+  // })
+
+
+    .state('onboarding', {
+      url: '/onboarding',
+      templateUrl: 'templates/onboarding.html',
+      controller: 'onboardingCtrl'
+    })
+
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'loginCtrl'
+    })
+
+
+  .state('AppCtrl', {
     url: '/',
+    abstract:true,
+    resolve: {
+
+                settings: function($ionicSettings, $ionicPopup) {
+                  console.log("touched");
+                    var settings = {
+                        toggle1: {
+                            type: 'toggle',
+                            label: 'Toggle 1',
+                            value: true
+                        },
+                        toggle2: {
+                            type: 'toggle',
+                            label: 'Toggle 2',
+                            value: false
+                        },
+                        pin: {
+                            type: 'pin',
+                            label: 'PIN',
+                            value: '',
+                            onValid: function() {
+                                $ionicPopup.alert({
+                                    title: 'Success',
+                                    template: 'Welcome!'
+                                });
+                            },
+                            onInvalid: function($event, wrongPinValue) {
+                                $ionicPopup.alert({
+                                    title: 'Fail',
+                                    template: 'Wrong pin: ' + wrongPinValue + '! Try again.'
+                                });
+                            }
+                        }
+                    };
+                    return $ionicSettings.init(settings);
+                }
+            }
+  })
+
+  .state('tabsController', {
+    url: '/tabs',
+    templateUrl: 'templates/tabsController.html',
+    abstract:true,
+
+  })
+
+  .state('tabsController.home', {
+    url: '/home',
     views: {
       'tab1': {
         templateUrl: 'templates/home.html',
-        controller: 'homeCtrl'
-      }
-    }
-  })
-
-  .state('tabsController.history', {
-    url: '/history',
-    views: {
-      'tab2': {
-        templateUrl: 'templates/history.html',
-        controller: 'historyCtrl'
+        controller: 'homeCtrl',
       }
     }
   })
@@ -68,43 +132,10 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('tabsController', {
-    url: '/page1',
-    templateUrl: 'templates/tabsController.html',
-    abstract:true
-  })
-
-
-  .state('tabsController.settings2', {
-    url: '/settings',
-    views: {
-      'tab4': {
-        templateUrl: 'templates/settings2.html',
-        controller: 'settings2Ctrl'
-      }
-    }
-  })
 
 
 
 
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'loginCtrl'
-  })
-
-  .state('onboarding', {
-    url: '/onboarding',
-    templateUrl: 'templates/onboarding.html',
-    controller: 'onboardingCtrl'
-  })
-
-  .state('page', {
-    url: '/page11',
-    templateUrl: 'templates/page.html',
-    controller: 'pageCtrl'
-  })
 
 $urlRouterProvider.otherwise('/onboarding')
 

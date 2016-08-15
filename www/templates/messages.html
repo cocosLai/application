@@ -25,11 +25,11 @@
         <div ng-repeat="messagePerDate in messagesToFilter() | filter:filterDates | orderBy:'-utc'">
             <h5 ng-if="messagePerDate.utc === today()" am-time-ago="today()"></h5>
             <h5 ng-if="messagePerDate.utc != today()">{{messagePerDate.utc}}</h5>
-            <ion-list id="messages-list4" class=" " can-swipe="listCanSwipe">
+            <ion-list id="messages-list4" class=" " can-swipe="true" >
               <!-- <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages" ui-sref="tabsController.messages.detail({ id: message.idInt })"> -->
                 <ion-item class="item-icon-left  " id="messages-list-item8" ng-repeat="message in messages | filter:{utc: messagePerDate.utc}" ui-sref="tabsController.messagedetail({ id: message.idInt })">
                     <i class="icon ion-ionic"></i>{{message.origin}}<br />{{message.messageContents}}
-                    <ion-option-button class="button-danger" ng-click="delete(message.idInt)">
+                    <ion-option-button class="button-assertive" ng-click="delete(message.idInt)">
                       Delete
                     </ion-option-button>
                 </ion-item>

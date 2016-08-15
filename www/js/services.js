@@ -156,8 +156,8 @@ angular.module('app.services', [])
 .factory('DeviceService',['$http', 'API_ENDPOINT', function($http, API_ENDPOINT){
     var device = []; //Private Variable
     return {
-        GetSMNumber: function(){
-            return $http.get(API_ENDPOINT.url + '/user/number').then(function(response){
+        GetDeviceState: function(){
+            return $http.get(API_ENDPOINT.url + '/user/device').then(function(response){
                 device = response.data;
                 return response.data;
             });

@@ -7,5 +7,5 @@
       "path": "/oauth/token",
       "proxyUrl": "https://api.secretme.net/oauth/token/"
     }
-  ],
+  ]
 }

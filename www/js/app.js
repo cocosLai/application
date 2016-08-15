@@ -29,6 +29,16 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 //   $httpProvider.defaults.headers.patch = {};
 // })
 
+.config(function($ionicSettingsConfigProvider) {
+    //$ionicSettingsConfigProvider.setColor('assertive');
+    $ionicSettingsConfigProvider.setIcon('ion-android-more-vertical');
+    //$ionicSettingsConfigProvider.setIconClose('ion-close-circled');
+    //$ionicSettingsConfigProvider.setIconClosePosition('left');
+    $ionicSettingsConfigProvider.setModalAnimation('slide-in-up');
+    $ionicSettingsConfigProvider.setTitle('Settings');
+    $ionicSettingsConfigProvider.setTouchID(false);
+})
+
 .config(function($stateProvider, $ionicConfigProvider) {
   //$ionicConfigProvider.views.maxCache(5);
 
