@@ -161,6 +161,11 @@ angular.module('app.services', [])
                 device = response.data;
                 return response.data;
             });
+        },
+		ChangeQuietMode: function(param){
+            return $http.post(API_ENDPOINT.url + '/user/device', param).then(function(response){
+                return response.data;
+            });
         }
     }
 }])
@@ -194,6 +199,13 @@ angular.module('app.services', [])
               messages = response.data;
               return response.data;
           });
+        },
+		DeleteMessage: function(messageId){
+          return $http.put(API_ENDPOINT.url + '/messages/' + messageId + "/status", {Status:"Trash"}).then(function(response){
+              return response.data;
+          }, function(error){
+				return error;
+		  });
         }
     }
 }])
@@ -204,7 +216,6 @@ angular.module('app.services', [])
         GetVoicemails: function(){
             return $http.get(API_ENDPOINT.url + '/voicemails').then(function(response){
                 voicemails = response.data;
-                console.log(voicemails);
                 return response.data;
             });
         },
@@ -216,3 +227,31 @@ angular.module('app.services', [])
         }
     }
 }])
+
+.factory('Storage', function(){
+  return {
+    getItem: function (key) {
+      return localStorage.getItem(key);
+    },
+
+    getObject: function (key) {
+      return angular.fromJson(localStorage.getItem(key));
+    },
+
+    setItem: function (key, data) {
+      localStorage.setItem(key, data);
+    },
+
+    setObject: function (key, data) {
+      localStorage.setItem(key, angular.toJson(data));
+    },
+
+    remove: function (key) {
+      localStorage.removeItem(key);
+    },
+
+    clearAll : function () {
+      localStorage.clear();
+    }
+  };
+})

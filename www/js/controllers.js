@@ -22,93 +22,117 @@ angular.module('app.controllers', [])
 })
 
 //Messages Master
-.controller("messagesCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($scope, $http, AuthService, API_ENDPOINT, MessageService){
-    MessageService.GetMessages().then(function(messages){
-        $scope.messages = messages;
+.controller("messagesCtrl", function($scope, $http, AuthService, API_ENDPOINT, MessageService, $ionicLoading){
 
-        var indexedDates = [];
+	var getMessages = function(){
+		$ionicLoading.show();
+	
+		MessageService.GetMessages().then(function(messages){
+			$ionicLoading.hide();
+			console.log(messages);
+			$scope.messages = messages;
 
-        $scope.messagesToFilter = function() {
-            indexedDates = [];
-            return $scope.messages;
-        }
+			var indexedDates = [];
 
-        $scope.filterDates = function(message) {
-          var dateIsNew = indexedDates.indexOf(message.utc) == -1;
+			$scope.messagesToFilter = function() {
+				indexedDates = [];
+				return $scope.messages;
+			}
 
-          if (dateIsNew) {
-            indexedDates.push(message.utc);
-          }
+			$scope.filterDates = function(message) {
+			  var dateIsNew = indexedDates.indexOf(message.utc) == -1;
 
-          return dateIsNew;
-        }
+			  if (dateIsNew) {
+				indexedDates.push(message.utc);
+			  }
 
-        var REFERENCE = moment();
-        var TODAY = REFERENCE.clone().startOf('day');
-        var YESTERDAY = REFERENCE.clone().subtract(1, 'days').startOf('day');
-        //var A_WEEK_OLD = REFERENCE.clone().subtract(7, 'days').startOf('day');
+			  return dateIsNew;
+			}
 
-function isToday(momentDate) {
-    return momentDate.isSame(TODAY, 'd');
-}
-function isYesterday(momentDate) {
-    return momentDate.isSame(YESTERDAY, 'd');
-}
+			var REFERENCE = moment();
+			var TODAY = REFERENCE.clone().startOf('day');
+			var YESTERDAY = REFERENCE.clone().subtract(1, 'days').startOf('day');
+			//var A_WEEK_OLD = REFERENCE.clone().subtract(7, 'days').startOf('day');
 
-        $scope.today = function() {
-          d = new Date();
-          var today = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
-          return today;
-        }
-        $scope.yesterday = function() {
-          d = new Date();
-          var yesterday = Date.UTC(d.getFullYear(), d.getMonth(), (d.getDate()-1));
-          return yesterday;
-        }
+			function isToday(momentDate) {
+				return momentDate.isSame(TODAY, 'd');
+			}
+			function isYesterday(momentDate) {
+				return momentDate.isSame(YESTERDAY, 'd');
+			}
 
-    });
-}])
+			$scope.today = function() {
+			  d = new Date();
+			  var today = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+			  return today;
+			}
+			$scope.yesterday = function() {
+			  d = new Date();
+			  var yesterday = Date.UTC(d.getFullYear(), d.getMonth(), (d.getDate()-1));
+			  return yesterday;
+			}
+
+		});
+	};
+	getMessages();
+
+	$scope.deleteMessage = function(index){
+		$ionicLoading.show();
+		MessageService.DeleteMessage($scope.messages[index].idInt).then(function(data){
+			console.log(data);
+			$scope.messages.splice(index, 1);
+			$ionicLoading.hide();
+		}, function(error){
+			console.log(error);
+			$ionicLoading.hide();
+		});
+	};
+})
 
 //Messages Detail
-.controller("messageCtrl",['$stateParams', '$scope', '$http','AuthService', 'API_ENDPOINT', 'MessageService',function($stateParams, $scope, $http, AuthService, API_ENDPOINT, MessageService){
+.controller("messageCtrl",function($stateParams, $scope, $http, AuthService, API_ENDPOINT, MessageService){
     var messageId = $stateParams.id;
     MessageService.GetMessage(messageId).then(function(message){
         $scope.message = message;
     });
-}])
+})
 
 //Voicemail Master
-.controller("voicemailsCtrl",['$scope', '$http','AuthService', 'API_ENDPOINT', 'VoicemailService',function($scope, $http, AuthService, API_ENDPOINT, VoicemailService){
-    VoicemailService.GetVoicemails().then(function(voicemails){
-        $scope.voicemails = voicemails;
-        var indexedDates = [];
+.controller("voicemailsCtrl",function($scope, $http, AuthService, API_ENDPOINT, VoicemailService, $ionicLoading){
+	var getVoiceMails = function(){
+		$ionicLoading.show();
+		VoicemailService.GetVoicemails().then(function(voicemails){
+			$ionicLoading.hide();
+			$scope.voicemails = voicemails;
+			console.log($scope.voicemails);
+			var indexedDates = [];
 
-        $scope.messagesToFilter = function() {
-            indexedDates = [];
-            return $scope.messages;
-        }
+			$scope.messagesToFilter = function() {
+				indexedDates = [];
+				return $scope.messages;
+			}
 
-        $scope.filterDates = function(message) {
-          var dateIsNew = indexedDates.indexOf(voicemail.utc) == -1;
+			$scope.filterDates = function(message) {
+			  var dateIsNew = indexedDates.indexOf(voicemail.utc) == -1;
 
-          if (dateIsNew) {
-            indexedDates.push(voicemail.utc);
-          }
+			  if (dateIsNew) {
+				indexedDates.push(voicemail.utc);
+			  }
 
-          return dateIsNew;
-        }
-    });
-}])
+			  return dateIsNew;
+			}
+		});
+	};
+	getVoiceMails();
+})
 
 //Voicemail Detail
-.controller("voicemailCtrl",['$stateParams', '$scope', '$http','AuthService', 'API_ENDPOINT', 'VoicemailService',function($stateParams, $scope, $http, AuthService, API_ENDPOINT, VoicemailService){
+.controller("voicemailCtrl",function($stateParams, $scope, $http, AuthService, API_ENDPOINT, VoicemailService){
     var voicemailId = $stateParams.id;
     VoicemailService.GetVoicemail(voicemailId).then(function(voicemail){
         $scope.message = voicemail;
     });
-}])
-
-
+})
 
 .controller('voicemailCtrl', function($scope) {
   $http.get(API_ENDPOINT.url + '/voicemails').then(function(result) {
@@ -120,15 +144,26 @@ function isYesterday(momentDate) {
 
 })
 
-.controller('homeCtrl', function($scope, AuthService, UserService, AUTH_EVENTS, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings) {
+.controller('homeCtrl', function($scope, $rootScope, AuthService, UserService, AUTH_EVENTS, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings, $timeout, $ionicLoading, DeviceService) {
+	$rootScope.userinfo = {};
 
-    UserService.GetUser().then(function(user){
-        $scope.userinfo = user;
-    });
+	var getUserInfo = function(){
+		$ionicLoading.show();
+		UserService.GetUser().then(function(user){
+			$ionicLoading.hide();
+			$rootScope.userinfo = user;
 
-    UserService.GetNumber().then(function(number){
-        $scope.userinfo.number = number.mobileNumber;
-    });
+			$rootScope.quietMode = $scope.userinfo.matmiPushState;
+					
+			UserService.GetNumber().then(function(number){
+				$rootScope.userinfo.number = number.mobileNumber;
+
+				console.log($rootScope.userinfo);
+			});
+		});
+	}
+	getUserInfo();
+    
 
     $rootScope.logout = function(){
         AuthService.logout();
@@ -173,7 +208,27 @@ function isYesterday(momentDate) {
 
 
     //console.log($rootScope.pushToken);
+	$scope.ids = {};
+	var registerTokenId = function(){
+		$timeout(function(){
+			try{
+				window.plugins.OneSignal.getIds(function(ids) {
+				  console.log('token: ' + ids.pushToken);
+				  //alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
+					$scope.ids.UserId = ids.userId;
+					$scope.ids.pushToken = ids.pushToken;
 
+					$ionicLoading.show();
+					var param = {deviceId:ids.pushToken}
+					DeviceService.ChangeQuietMode(param).then(function(data){
+						console.log(data);
+						$ionicLoading.hide();
+					});
+				});
+			}catch(e){console.log(e);}
+		});
+	}
+	registerTokenId();
 })
 
 // .controller('settings2Ctrl', [$scope, SettingsFactory, function($scope, SettingsFactory) {
@@ -201,7 +256,7 @@ function isYesterday(momentDate) {
 
 
 
-.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicSettings) {
+.controller('AppCtrl', function($scope, $rootScope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicSettings, DeviceService, $ionicLoading) {
   $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
     AuthService.logout();
     $state.go('login');
@@ -212,11 +267,24 @@ function isYesterday(momentDate) {
   });
 
   $scope.initQuietMode = function(){
-    $scope.quietMode = true;
+    $rootScope.quietMode = true;
   }
 
   $scope.changeQuietMode = function(){
-    $scope.quietMode = !$scope.quietMode;
+	  if($rootScope.userinfo.matmiDeviceId){
+			//$scope.quietMode = !$scope.quietMode;
+			$ionicLoading.show();
+			$rootScope.quietMode = !$rootScope.quietMode;
+			if($rootScope.quietMode){
+				var param = {deviceId:$rootScope.userinfo.matmiDeviceId, "pushState":1}
+			}else{
+				var param = {deviceId:$rootScope.userinfo.matmiDeviceId, "pushState":0}
+			}
+			DeviceService.ChangeQuietMode(param).then(function(data){
+				console.log(data);
+				$ionicLoading.hide();
+			});
+	  }
   }
 
   $scope.authenticated = AuthService.isAuthenticated();
