@@ -19,7 +19,74 @@ angular.module('app.routes', ['ionicSettings'])
   //     }
   //   }
   // })
+    .state('start', {
+      url: '/start',
+      templateUrl: 'templates/start.html',
 
+      controller: 'startCtrl',
+
+      resolve: {
+
+                  settings: function($ionicSettings, $ionicPopup) {
+                    // console.log("touched");
+                      var settings = {
+                          label1: 'Noitifications',
+                          toggle1: {
+                              type: 'toggle',
+                              label: 'Device Push Notifications',
+                              value: true
+                          },
+                          toggle2: {
+                              type: 'toggle',
+                              label: 'Email Notifications',
+                              value: false
+                          },
+
+                          label2: 'Security',
+
+                          pin: {
+                              type: 'pin',
+                              label: 'PIN & Touch ID',
+                              icon: 'ion-locked',
+                              value: '',
+                              onValid: function() {
+                                  // Correct Pin, get in!
+                              },
+                              onInvalid: function($event, wrongPinValue) {
+                                  $ionicPopup.alert({
+                                      title: 'Denied!',
+                                      template: 'Wrong pin! Try again.'
+                                  });
+                              }
+                          },
+
+                          label3: 'Account',
+                          buyCredit: {
+                              type: 'button',
+                              label: 'Buy Credit',
+                              icon: 'ion-ios-cart',
+                              onClick: function() {
+                                  window.open('http://secretme.net', '_system');
+                              }
+                          },
+                          myAccount: {
+                              type: 'button',
+                              label: 'My Account',
+                              icon: 'ion-android-person',
+                              onClick: function() {
+                                  window.open('http://secretme.net', '_system');
+                              }
+                          },
+
+
+                      };
+                    return $ionicSettings.init(settings);
+
+
+
+                  }
+              }
+    })
 
     .state('onboarding', {
       url: '/onboarding',
@@ -132,11 +199,19 @@ angular.module('app.routes', ['ionicSettings'])
     }
   })
 
+  .state('tabsController.settings', {
+    url: '/settings',
+    views: {
+      'tab5': {
+        templateUrl: 'templates/settings.html',
+        controller: 'settingsCtrl'
+      }
+    }
+  })
 
 
 
 
+  $urlRouterProvider.otherwise('/start')
 
-$urlRouterProvider.otherwise('/onboarding')
-
-})
+  })

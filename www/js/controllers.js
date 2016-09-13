@@ -1,5 +1,9 @@
 angular.module('app.controllers', [])
 
+.controller('startCtrl', function($scope, AuthService, $ionicSettings, $state) {
+  $state.go('onboarding');
+})
+
 .controller('loginCtrl', function($scope, AuthService, $ionicPopup, $state) {
   $scope.user = {
     grant_type: 'password',
@@ -26,7 +30,7 @@ angular.module('app.controllers', [])
 
 	var getMessages = function(){
 		$ionicLoading.show();
-	
+
 		MessageService.GetMessages().then(function(messages){
 			$ionicLoading.hide();
 			console.log(messages);
@@ -154,7 +158,7 @@ angular.module('app.controllers', [])
 			$rootScope.userinfo = user;
 
 			$rootScope.quietMode = $scope.userinfo.matmiPushState;
-					
+
 			UserService.GetNumber().then(function(number){
 				$rootScope.userinfo.number = number.mobileNumber;
 
@@ -163,7 +167,7 @@ angular.module('app.controllers', [])
 		});
 	}
 	getUserInfo();
-    
+
 
     $rootScope.logout = function(){
         AuthService.logout();
@@ -250,7 +254,23 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('onboardingCtrl', function($scope) {
+.controller('onboardingCtrl', function($scope, $state) {
+
+  var ONBOARDING_SEEN;
+
+  var isSeen = window.localStorage.getItem(ONBOARDING_SEEN);
+
+  if (!isSeen) {
+    isSeen = window.localStorage.setItem(ONBOARDING_SEEN, true);
+  }
+
+  if (isSeen) {
+    $state.go('tabsController.home');
+  }
+
+})
+
+.controller('settingsCtrl', function($scope) {
 
 })
 
@@ -271,7 +291,7 @@ angular.module('app.controllers', [])
   }
 
   $scope.changeQuietMode = function(){
-	  if($rootScope.userinfo.matmiDeviceId){
+	  //if($rootScope.userinfo.matmiDeviceId){
 			//$scope.quietMode = !$scope.quietMode;
 			$ionicLoading.show();
 			$rootScope.quietMode = !$rootScope.quietMode;
@@ -284,12 +304,12 @@ angular.module('app.controllers', [])
 				console.log(data);
 				$ionicLoading.hide();
 			});
-	  }
+	  //}
   }
 
   $scope.authenticated = AuthService.isAuthenticated();
 
-  $scope.test = "This Works";
+  //$scope.test = "This Works";
 
     // $ionicSettings.init({
     //     awesomeSelection: {
