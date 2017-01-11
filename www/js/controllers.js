@@ -148,11 +148,11 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('homeCtrl', function($scope, $rootScope, AuthService, UserService, AUTH_EVENTS, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings, $timeout, $ionicLoading, DeviceService) {
+.controller('homeCtrl', function($scope, $rootScope, $ionicPlatform, AuthService, UserService, AUTH_EVENTS, API_ENDPOINT, $http, $state, $rootScope, $ionicSettings, $timeout, $ionicLoading, DeviceService) {
 	$rootScope.userinfo = {};
 
 	var getUserInfo = function(){
-		$ionicLoading.show();
+		//$ionicLoading.show();
 		UserService.GetUser().then(function(user){
 			$ionicLoading.hide();
 			$rootScope.userinfo = user;
@@ -172,6 +172,7 @@ angular.module('app.controllers', [])
     $rootScope.logout = function(){
         AuthService.logout();
         $state.go('login');
+        $ionicLoading.hide();
     }
 
 
@@ -212,27 +213,29 @@ angular.module('app.controllers', [])
 
 
     //console.log($rootScope.pushToken);
-	$scope.ids = {};
-	var registerTokenId = function(){
-		$timeout(function(){
-			try{
-				window.plugins.OneSignal.getIds(function(ids) {
-				  console.log('token: ' + ids.pushToken);
-				  //alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
-					$scope.ids.UserId = ids.userId;
-					$scope.ids.pushToken = ids.pushToken;
-
-					$ionicLoading.show();
-					var param = {deviceId:ids.pushToken}
-					DeviceService.ChangeQuietMode(param).then(function(data){
-						console.log(data);
-						$ionicLoading.hide();
-					});
-				});
-			}catch(e){console.log(e);}
-		});
-	}
-	registerTokenId();
+	// $scope.ids = {};
+	// var registerTokenId = function(){
+	// 	$timeout(function(){
+	// 		try{
+	// 			//window.plugins.OneSignal.getIds(function(ids) {
+	// 			  //console.log('token: ' + ids.pushToken);
+	// 			  //alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
+  //         console.log(Push.token);
+  //
+	// 				//$scope.ids.UserId = ids.userId;
+	// 				//$scope.ids.pushToken = ids.pushToken;
+  //
+	// 				$ionicLoading.show();
+	// 				var param = {deviceId:token.token}
+	// 				DeviceService.ChangeQuietMode(param).then(function(data){
+	// 					console.log(data);
+	// 					$ionicLoading.hide();
+	// 				});
+	// 			//});
+	// 		}catch(e){console.log(e);}
+	// 	});
+	// }
+	// registerTokenId();
 })
 
 // .controller('settings2Ctrl', [$scope, SettingsFactory, function($scope, SettingsFactory) {
@@ -296,9 +299,9 @@ angular.module('app.controllers', [])
 			$ionicLoading.show();
 			$rootScope.quietMode = !$rootScope.quietMode;
 			if($rootScope.quietMode){
-				var param = {deviceId:$rootScope.userinfo.matmiDeviceId, "pushState":1}
+				var param = {"pushState":1}
 			}else{
-				var param = {deviceId:$rootScope.userinfo.matmiDeviceId, "pushState":0}
+				var param = {"pushState":0}
 			}
 			DeviceService.ChangeQuietMode(param).then(function(data){
 				console.log(data);
@@ -308,21 +311,5 @@ angular.module('app.controllers', [])
   }
 
   $scope.authenticated = AuthService.isAuthenticated();
-
-  //$scope.test = "This Works";
-
-    // $ionicSettings.init({
-    //     awesomeSelection: {
-    //         type: 'selection',
-    //         values: ['one', 'two', 'three'],
-    //         label: 'Awesome Selection',
-    //         value: 'two'
-    //     },
-    //     coolToggle: {
-    //         type: 'toggle',
-    //         label: 'Cool toggle',
-    //         value: true
-    //     }
-    // });
 
 });

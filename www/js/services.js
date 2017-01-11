@@ -40,6 +40,7 @@ angular.module('app.services', [])
 
   function loadUserCredentials() {
     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
+    console.log(token);
     if (token) {
       useCredentials(token);
     }
@@ -47,11 +48,11 @@ angular.module('app.services', [])
 
   function storeUserCredentials(token) {
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
-    //Send device ID to SM API
+    // Send device ID to SM API
     // $http({
     //   method: 'POST',
-    //   url: AUTH_ENDPOINT.url,
-    //   data: {  }
+    //   url: AUTH_ENDPOINT.url + '',
+    //   data: { deviceId }
     // }).then(function(result) {
     //
     // });
@@ -162,10 +163,10 @@ angular.module('app.services', [])
                 return response.data;
             });
         },
-		ChangeQuietMode: function(param){
-            return $http.post(API_ENDPOINT.url + '/user/device', param).then(function(response){
-                return response.data;
-            });
+    		ChangeQuietMode: function(param){
+                return $http.post(API_ENDPOINT.url + '/user/device', param).then(function(response){
+                    return response.data;
+                });
         }
     }
 }])

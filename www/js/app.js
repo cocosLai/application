@@ -5,7 +5,18 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ionicSettings', 'angularMoment'])
+angular.module('app', [
+  'ionic',
+  'ionic.service.core',
+  'ionic.cloud',
+  'app.controllers',
+  'app.routes',
+  'app.factories',
+  'app.services',
+  'app.directives',
+  'ionicSettings',
+  'angularMoment'
+])
 
 .constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
@@ -13,14 +24,19 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 
 .constant('API_ENDPOINT', {
 //  url: 'http://10.0.0.25:8100/api'
-    url: 'https://api.secretme.net/api'
+    url: 'http://92.48.119.95/api'
 })
 
 
 .constant('AUTH_ENDPOINT', {
   //url: '/oauth/token'
-  url: 'https://api.secretme.net/oauth/token'
+  url: 'http://92.48.119.95/oauth/token'
 })
+
+// .constant('$ionicLoadingConfig', {
+//   template: 'Default Loading Template...',
+//   noBackdrop: true
+// })
 
 // .config(function ($httpProvider) {
 //   $httpProvider.defaults.headers.common = {};
@@ -28,6 +44,26 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 //   $httpProvider.defaults.headers.put = {};
 //   $httpProvider.defaults.headers.patch = {};
 // })
+
+.config(function($ionicCloudProvider) {
+  $ionicCloudProvider.init({
+    "core": {
+      "app_id": "b18dadec"
+    },
+    "push": {
+      "sender_id": "200307326449",
+      "pluginConfig": {
+        "ios": {
+          "badge": true,
+          "sound": true
+        },
+        "android": {
+          "iconColor": "#343434"
+        }
+      }
+    }
+  });
+})
 
 .config(function($ionicSettingsConfigProvider) {
     //$ionicSettingsConfigProvider.setColor('assertive');
@@ -46,9 +82,30 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
   // note that you can also chain configs
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS) {
+.run(function($ionicPlatform, $ionicPush, $rootScope, $state, PushFactory, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
 
+    var notificationOpenedCallback = function(jsonData) {
+      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+    };
+
+
+    var push = new Ionic.Push({
+      "debug": true
+    });
+
+    push.register(function(token) {
+      console.log("My Device token:",token.token);
+      push.saveToken(token);
+        // persist the token in the Ionic Platform
+      PushFactory.storeDeviceToken(token.type, token.token);
+    });
+
+
+    //                                {googleProjectNumber: "830511586224"}
+
+
+    // Show an alert box if a notification comes in when the user is in your app.
 
       // Monitor state changes and check if we're authenticated. If not, and the next route isn't login or onboarding, send them to login
       $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
@@ -60,23 +117,7 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
         }
       });
 
-    // lockScreen
-    //
-    // $lockScreen.show({
-    //   ACDelbuttons: true,
-    //   touchId: true,
-    //     backgroundColor: '#00a9ec',
-    //     textColor: '#ffffff',
-    //     buttonBorder: '50%',
-    //     code: '1234',
-    //
-    //     onCorrect: function () {
-    //       console.log('correct!');
-    //     },
-    //     onWrong: function (attemptNumber) {
-    //       console.log(attemptNumber + ' wrong passcode attempt(s)');
-    //     },
-    //   });
+
 
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -94,22 +135,9 @@ angular.module('app', ['ionic','ionic.service.core', 'app.controllers', 'app.rou
 })
 
 document.addEventListener('deviceready', function ($rootScope) {
-  // Enable to debug issues.
-  window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
 
   hockeyapp.start(null, null, "061931d93db74b138c043b0b1520eca1");
 
   hockeyapp.checkForUpdate();
-
-  var notificationOpenedCallback = function(jsonData) {
-    console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
-  };
-
-  window.plugins.OneSignal.init("98a36864-756e-47ea-9fac-13f0d9ff2b20",
-                                 {googleProjectNumber: "830511586224"},
-                                 notificationOpenedCallback);
-
-  // Show an alert box if a notification comes in when the user is in your app.
-  window.plugins.OneSignal.enableInAppAlertNotification(true);
 
 }, false);
