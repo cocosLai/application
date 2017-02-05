@@ -3,8 +3,14 @@
   "app_id": "b18dadec",
   "proxies": [
     {
+      "path": "/api",
+      "proxyUrl": "http://api.secretme.net/api"
+    },
+    {
       "path": "/oauth/token",
-      "proxyUrl": "https://api.secretme.net/oauth/token/"
+      "proxyUrl": "http://api.secretme.net/oauth/token"
     }
   ]
+
+
 }

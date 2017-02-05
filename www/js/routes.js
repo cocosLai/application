@@ -100,6 +100,11 @@ angular.module('app.routes', ['ionicSettings'])
       controller: 'loginCtrl'
     })
 
+    .state('dialer', {
+      url: '/dialler',
+      templateUrl: 'templates/dialler.html',
+      controller: 'diallerCtrl'
+    })
 
   .state('AppCtrl', {
     url: '/',

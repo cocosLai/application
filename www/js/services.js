@@ -33,7 +33,7 @@ angular.module('app.services', [])
 //     }
 // }]);
 
-.service('AuthService', function($q, $http, API_ENDPOINT, AUTH_ENDPOINT) {
+.service('AuthService', function($q, $http, $ionicPush, PushFactory, API_ENDPOINT, AUTH_ENDPOINT) {
   var LOCAL_TOKEN_KEY = 'yourTokenKey';
   var isAuthenticated = false;
   var authToken;
@@ -96,9 +96,18 @@ angular.module('app.services', [])
       }).then(function(response) {
           //Login success, store the bearer token.
           storeUserCredentials(response.data.access_token);
+
+          $ionicPush.register().then(function(t) {
+            return $ionicPush.saveToken(t);
+          }).then(function(t) {
+            console.log('Token saved:', t.token);
+            PushFactory.storeDeviceToken(t.type, t.token);
+          });
+
           resolve(response.statusText);
 
       },function error(response) {
+        console.log(JSON.stringify(response));
         reject(response.data.error_description);
       });
 

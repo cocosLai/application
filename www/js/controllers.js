@@ -4,6 +4,10 @@ angular.module('app.controllers', [])
   $state.go('onboarding');
 })
 
+.controller('diallerCtrl', function($scope, AuthService, $ionicSettings, $state, $stateParams) {
+  $scope.callerID = $stateParams.originNumber
+})
+
 .controller('loginCtrl', function($scope, AuthService, $ionicPopup, $state) {
   $scope.user = {
     grant_type: 'password',

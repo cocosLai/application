@@ -7,7 +7,6 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('app', [
   'ionic',
-  'ionic.service.core',
   'ionic.cloud',
   'app.controllers',
   'app.routes',
@@ -23,15 +22,18 @@ angular.module('app', [
 })
 
 .constant('API_ENDPOINT', {
-//  url: 'http://10.0.0.25:8100/api'
+  //url: 'http://10.0.0.5:8100/api'
+  //url: '/api'
     url: 'http://92.48.119.95/api'
 })
 
 
 .constant('AUTH_ENDPOINT', {
-  //url: '/oauth/token'
   url: 'http://92.48.119.95/oauth/token'
+  //url: '/oauth/token'
+  //url: 'http://10.0.0.5:8100/oauth/token'
 })
+
 
 // .constant('$ionicLoadingConfig', {
 //   template: 'Default Loading Template...',
@@ -65,6 +67,7 @@ angular.module('app', [
   });
 })
 
+
 .config(function($ionicSettingsConfigProvider) {
     //$ionicSettingsConfigProvider.setColor('assertive');
     $ionicSettingsConfigProvider.setIcon('ion-android-more-vertical');
@@ -90,16 +93,19 @@ angular.module('app', [
     };
 
 
-    var push = new Ionic.Push({
-      "debug": true
-    });
+    // $ionicPush.register().then(function(t) {
+    //   return $ionicPush.saveToken(t);
+    // }).then(function(t) {
+    //   console.log('Token saved:', t.token);
+    //   PushFactory.storeDeviceToken(t.type, t.token);
+    // });
 
-    push.register(function(token) {
-      console.log("My Device token:",token.token);
-      push.saveToken(token);
-        // persist the token in the Ionic Platform
-      PushFactory.storeDeviceToken(token.type, token.token);
-    });
+    // push.register(function(token) {
+    //   console.log("My Device token:",token.token);
+    //   push.saveToken(token);
+    //     // persist the token in the Ionic Platform
+    //   PushFactory.storeDeviceToken(token.type, token.token);
+    // });
 
 
     //                                {googleProjectNumber: "830511586224"}
@@ -134,10 +140,10 @@ angular.module('app', [
   });
 })
 
-document.addEventListener('deviceready', function ($rootScope) {
-
-  hockeyapp.start(null, null, "061931d93db74b138c043b0b1520eca1");
-
-  hockeyapp.checkForUpdate();
-
-}, false);
+// document.addEventListener('deviceready', function ($rootScope) {
+//
+//   hockeyapp.start(null, null, "061931d93db74b138c043b0b1520eca1");
+//
+//   hockeyapp.checkForUpdate();
+//
+// }, false);
