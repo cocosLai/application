@@ -5,7 +5,19 @@ angular.module('app.controllers', [])
 })
 
 .controller('diallerCtrl', function($scope, AuthService, $ionicSettings, $state, $stateParams) {
-  $scope.callerID = $stateParams.originNumber
+
+        console.log(JSON.stringify($stateParams));
+
+        $scope.callerID = $stateParams.originNumber
+
+        $scope.data = {
+            phoneNumber : "01625560771"
+        };
+
+        $scope.dialNumber = function(number) {
+            window.open('tel:' + number, '_system');
+        }
+
 })
 
 .controller('loginCtrl', function($scope, AuthService, $ionicPopup, $state) {
@@ -283,7 +295,7 @@ angular.module('app.controllers', [])
 
 
 
-.controller('AppCtrl', function($scope, $rootScope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicSettings, DeviceService, $ionicLoading) {
+.controller('AppCtrl', function($scope, $rootScope, $state, $ionicPush, $ionicPopup, AuthService, AUTH_EVENTS, $ionicSettings, DeviceService, $ionicLoading) {
   $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
     AuthService.logout();
     $state.go('login');
@@ -315,5 +327,21 @@ angular.module('app.controllers', [])
   }
 
   $scope.authenticated = AuthService.isAuthenticated();
+
+  if(AuthService.isAuthenticated()) {
+    $ionicPush.register().then(function(t) {
+      return $ionicPush.saveToken(t);
+    }).then(function(t) {
+      console.log('Token saved:', t.token);
+    });
+  }
+
+  $rootScope.$on('cloud:push:notification', function(event, data) {
+    var msg = data.message;
+    alert(msg.title + ': ' + msg.text);
+    //console.log(JSON.stringify(msg.payload.$stateParams.originNumber));
+    $state.go(msg.payload.$state, {'originNumber': msg.payload.$stateParams.originNumber})
+
+  });
 
 });

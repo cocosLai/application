@@ -2,6 +2,7 @@
     <ion-content padding="true" class="has-header">
       <div class="spacer" style="height: 100px;"></div>
       <h2 id="dialler-heading2" style="color:#000000;text-align:center;">Incoming call from {{callerID}}</h2>
-      <a href="tel:441212072324" id="dialler-button8" class="button button-balanced  button-block">Dial in and answer</a>
+      <a id="dialler-button8" class="button button-balanced button-block" ng-click="dialNumber(data.phoneNumber)" ng-if="data.phoneNumber">Dial in and answer ({{data.phoneNumber}})</a>
+
     </ion-content>
 </ion-view>

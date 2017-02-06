@@ -85,12 +85,8 @@ angular.module('app', [
   // note that you can also chain configs
 })
 
-.run(function($ionicPlatform, $ionicPush, $rootScope, $state, PushFactory, AuthService, AUTH_EVENTS) {
+.run(function($ionicPlatform, $ionicPush, $ionicSettings, $rootScope, $state, PushFactory, $ionicPopup, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
-
-    var notificationOpenedCallback = function(jsonData) {
-      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-    };
 
 
     // $ionicPush.register().then(function(t) {

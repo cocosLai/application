@@ -9,6 +9,7 @@
     </author>
   <content src="index.html"/>
   <access origin="*"/>
+  <access origin="tel:*" launch-external="yes"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
@@ -75,5 +76,5 @@
   <plugin name="phonegap-plugin-push" spec="~1.8.4">
     <variable name="SENDER_ID" value="200307326449"/>
   </plugin>
-  <allow-navigation href="http://10.0.0.5:8100"/>
+  <allow-navigation href="http://10.0.0.5:8100/"/>
 </widget>

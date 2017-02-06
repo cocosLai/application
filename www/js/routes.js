@@ -103,7 +103,8 @@ angular.module('app.routes', ['ionicSettings'])
     .state('dialer', {
       url: '/dialler',
       templateUrl: 'templates/dialler.html',
-      controller: 'diallerCtrl'
+      params:      {'originNumber': null},
+      controller: 'diallerCtrl',
     })
 
   .state('AppCtrl', {
